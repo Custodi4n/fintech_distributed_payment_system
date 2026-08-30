@@ -96,3 +96,38 @@ All business scenarios can be executed instantly via the included `test-requests
 - **Databases:** PostgreSQL 16 (Dedicated DB per microservice: `account_db`, `antifraud_db`, `payment_db`)
 - **Database Migrations:** Flyway
 - **Tooling & Build:** Maven Multi-Module, Docker & Docker Compose
+
+## 🐳 Deployment & Container Orchestration
+
+### 1. One-Click Launch via Docker Compose
+
+To build and spin up the entire distributed ecosystem (PostgreSQL, Kafka, Kafka UI, and all 3 microservices) in isolated networks:
+
+```bash
+docker compose -f deploy/docker-compose/docker-compose.yml up --build -d
+```
+
+### Services Map:
+- Account Service: `http://localhost:8081`
+- Anti-Fraud Service: `http://localhost:8082`
+- Payment Service: `http://localhost:8083`
+- Kafka UI Web Dashboard: `http://localhost:8080`
+- PostgreSQL: `localhost:5432`
+
+### 2. Kubernetes (K8s) Cluster Deployment
+
+To deploy to a Kubernetes cluster (Minikube / Kind / EKS / GKE):
+
+```bash
+# 1. Apply Namespace, Configs and Secrets
+kubectl apply -f deploy/k8s/00-namespace.yaml
+kubectl apply -f deploy/k8s/01-config-and-secrets.yaml
+
+# 2. Deploy Microservices with Health Probes & Resource Limits
+kubectl apply -f deploy/k8s/02-account-service.yaml
+kubectl apply -f deploy/k8s/03-anti-fraud-service.yaml
+kubectl apply -f deploy/k8s/04-payment-service.yaml
+
+# 3. Verify Pods Status
+kubectl get pods -n fintech-platform
+```
