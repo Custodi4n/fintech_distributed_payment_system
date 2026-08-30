@@ -1,4 +1,4 @@
-[![CI Pipeline](https://github.com/ВАШ_GITHUB_USERNAME/fintech_distributed_payment_system/actions/workflows/ci.yml/badge.svg)](https://github.com/Custodi4n/fintech_distributed_payment_system/actions/workflows/ci.yml)
+[![Fintech Platform CI Pipeline](https://github.com/Custodi4n/fintech_distributed_payment_system/actions/workflows/ci.yml/badge.svg)](https://github.com/Custodi4n/fintech_distributed_payment_system/actions/workflows/ci.yml)
 # 💳 Fintech High-Load Distributed Payment & Anti-Fraud Platform
 
 Production-ready distributed banking and payment orchestration platform built on **Spring Boot 3, Java 21, Apache Kafka, PostgreSQL, and Flyway**, demonstrating enterprise architectural patterns (**Saga Choreography, Transactional Outbox, Idempotency, and Multi-Stage Containerization**).
