@@ -1,0 +1,7 @@
+CREATE DATABASE account_db;
+CREATE DATABASE payment_db;
+CREATE DATABASE antifraud_db;
+
+GRANT ALL PRIVILEGES ON DATABASE account_db TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE payment_db TO postgres;
+GRANT ALL PRIVILEGES ON DATABASE antifraud_db TO postgres;
