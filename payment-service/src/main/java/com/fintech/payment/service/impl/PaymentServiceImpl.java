@@ -51,7 +51,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment savedPayment = paymentRepository.save(payment);
 
-        // 2. Transactional Outbox: сохраняем событие в Outbox в ТОЙ ЖЕ транзакции БД
+        // 2. Transactional Outbox: сохраняем событие в Outbox в той же транзакции БД
         PaymentCreatedEvent event = PaymentCreatedEvent.builder()
                 .paymentId(savedPayment.getId())
                 .senderAccountId(savedPayment.getSenderAccountId())
@@ -84,7 +84,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = Exception.class)
     public void processFraudVerdict(FraudCheckVerdictEvent verdict) {
         log.info("Processing fraud verdict for payment {}. Approved: {}", verdict.getPaymentId(), verdict.isApproved());
 
@@ -95,7 +95,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (!verdict.isApproved()) {
             payment.setStatus(PaymentStatus.FRAUD_REJECTED);
             payment.setFailReason(verdict.getReason());
-            paymentRepository.save(payment);
+            paymentRepository.saveAndFlush(payment);
             log.warn("Payment {} was REJECTED by Anti-Fraud: {}", payment.getId(), verdict.getReason());
             return;
         }
@@ -115,10 +115,15 @@ public class PaymentServiceImpl implements PaymentService {
         } catch (Exception e) {
             log.error("Failed to execute money transfer for payment {}: {}", payment.getId(), e.getMessage());
             payment.setStatus(PaymentStatus.FAILED);
-            payment.setFailReason("Account transfer failed: " + e.getMessage());
+            
+            // Защита от переполнения строки ошибки
+            String rawMessage = e.getMessage() != null ? e.getMessage() : "Unknown transfer error";
+            String sanitizedReason = rawMessage.length() > 250 ? rawMessage.substring(0, 250) + "..." : rawMessage;
+            
+            payment.setFailReason(sanitizedReason);
         }
 
-        paymentRepository.save(payment);
+        paymentRepository.saveAndFlush(payment);
     }
 
     private PaymentResponse mapToResponse(Payment payment) {

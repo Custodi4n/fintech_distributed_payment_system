@@ -39,7 +39,7 @@ public class Payment {
     @Column(name = "status", nullable = false, length = 32)
     private PaymentStatus status;
 
-    @Column(name = "fail_reason")
+    @Column(name = "fail_reason", columnDefinition = "TEXT")
     private String failReason;
 
     @CreationTimestamp
