@@ -30,7 +30,7 @@
     <!-- Модули микросервисной системы -->
     <modules>
         <module>common-dto</module>
-        <!-- <module>account-service</module> -->
+        <module>account-service</module>
     </modules>
 
     <dependencyManagement>
