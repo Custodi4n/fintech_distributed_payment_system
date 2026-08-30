@@ -1,0 +1,8 @@
+target/
+**/target/
+.git
+.idea
+.vscode
+*.iml
+*.log
+test-requests.http
